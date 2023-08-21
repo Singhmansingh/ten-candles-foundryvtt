@@ -1,0 +1,68 @@
+<form class="actor-sheet {{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="64" width="64"/>
+        <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="{{ localize 'Name' }}"/></h1>
+    </header>
+
+    <section class="tc-card" style="margin-bottom: 5px">
+        <div class="tc-cardhead border">
+            <p>Appearance & Background</p>
+        </div>
+        <textarea name="system.biography">{{actor.system.biography}}</textarea>
+    </section>
+    <hr>
+    {{#if actor.system.brink.value}}
+        {{#if actor.system.locked}}
+        <button class="tc-burnbutton"><i class="fas fa-fire"></i>&nbsp;&nbsp;Burn your {{#if cards.length}}{{cards.[0].label}}{{else}}Brink{{/if}}</button>
+        {{else}}
+        <button class="tc-lock"><i class="fas fa-lock"></i>&nbsp;&nbsp;Lock in stack</button>
+        {{/if}}
+    {{else}}
+        <button disabled><i class="fas fa-fire"></i>&nbsp;&nbsp;Nothing left to burn</button>
+    {{/if}}
+    <div>
+        {{#each cards}}
+            <section class="tc-card stackable" data-slug="{{this.slug}}">
+                <div class="tc-cardhead border">
+                    <div class="tc-cardhead-part flexrow">
+                        {{#unless ../actor.system.locked}}
+                            <button id="{{this.slug}}_up" style="text-align:left;" class="tc-shift" aria-label="move {{slug}} up"><i class="fa-solid fa-chevron-up"></i></button>
+                            <button id="{{this.slug}}_down" style="text-align:left;" class="tc-shift" aria-label="move {{slug}} down"><i class="fa-solid fa-chevron-down"></i></button>
+                        {{/unless}}
+                        &nbsp;
+                        <p>{{this.label}}</p>
+                        &nbsp;
+                        &nbsp;
+                        <span class="tc-subtitle" style="white-space: nowrap; display:flex;align-items:center;">{{this.tooltip}}...</span>
+                    </div>
+                    
+                    <div class="tc-cardhead-part flexrow">
+                        
+                    </div>
+                
+                </div>
+                <textarea required {{#if ../actor.system.locked}}disabled{{/if}} name="system.{{this.slug}}.text" placeholder="{{this.phrase}}...">{{this.text}}</textarea>
+            </section>
+        {{/each}}
+    </div>
+    <hr>
+    {{#if actor.system.brink.value}}
+        <section class="tc-card" data-slug="{{actor.system.brink.slug}}">
+            <div class="tc-cardhead border">
+                <div class="tc-cardhead-part flexrow">
+                    <p class="tc-brink">{{actor.system.brink.label}}</p>
+                    &nbsp;
+                    &nbsp;
+                    <span class="tc-subtitle" style="white-space: nowrap; display:flex;align-items:center;">{{actor.system.brink.tooltip}}...</span>
+                </div>
+                <div class="tc-cardhead-part flexrow">
+
+                </div>
+                        
+            </div>
+            <textarea required {{#if ../actor.system.locked}}disabled{{/if}} name="system.brink.text" placeholder="{{actor.system.brink.phrase}}...">{{actor.system.brink.text}}</textarea>
+        </section>
+    {{/if}}
+
+</form>
+

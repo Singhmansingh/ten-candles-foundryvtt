@@ -1,0 +1,31 @@
+<form class="cgridcol" id="truths-container">
+    <h2 class="centered">These things are true...</h2>
+
+    
+    <div class="item-list">
+        <p class="centered"><em>The world is dark</em></p>
+    {{#each truths as |truth id|}}
+        <div class="item">
+            
+                <button id="deltruth_{{id}}" {{#if ../isPL}} disabled {{/if}} type="submit" class="inline"><i class="fas {{#if ../isGM}}fa-fire{{else}}fa-scroll{{/if}} burn-truth"></i></button>
+            
+            &nbsp;&nbsp;{{increment id}}. {{truth}}
+        </div>
+    {{/each}}
+    </div>
+
+    <div class="foot">
+        {{#if isGM}}
+            <div class="form-group">
+                <label for="exampleInput">New Truth</label>
+                <input type="text" name="exampleInput" style="color: {{color}}" value="{{msg}}">
+            </div>
+        {{/if}}
+        <footer class="sheet-footer flexrow">
+            <button type="submit" name="submit" id="addtruth">
+                <i class="fa fa-check"></i> OK
+            </button>
+        </footer>
+    </div>
+
+</form>

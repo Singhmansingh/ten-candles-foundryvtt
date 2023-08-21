@@ -1,0 +1,12 @@
+<div class="flexrow survivor-hud">
+    {{#each actors as |actor id|}}
+    <div class="flex1 survivor {{#if actor.onBrink}}on-brink{{/if}} {{#if actor.overBrink}}over-brink{{/if}}" id="survivor_{{actor.id}}">
+        <div class="survivor-img"><img src="{{actor.img}}" title="{{actor.name}}" height="64"/></div>
+        <div class="name">{{actor.name}}</div>
+        <div class="card-data">
+            <div class="card-type">{{actor.topCard.label}}</div>
+            <div class="card-text">{{actor.topCard.text}}</div>
+        </div>
+    </div>
+    {{/each}}
+</div>

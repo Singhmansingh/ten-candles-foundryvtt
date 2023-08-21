@@ -1,0 +1,64 @@
+{
+    "Actor": {
+      "types": ["us","them"],
+      "templates": {
+        "background":{
+            "biography":"",
+            "look":""
+        },
+        "resources": {
+          "locked":false,
+          "stack":["virtue","vice","hope"],
+          "virtue":{
+            "slug":"virtue",
+            "phrase":"My Virtue is",
+            "tooltip":"A trait which I am proud of, or that is otherwise helpful and positive.",
+            "label":"Virtue",
+            "text":"",
+            "value":1,
+            "min":0,
+            "max":1
+          },
+          "vice":{
+            "slug":"vice",
+            "phrase":"My Vice is",
+            "tooltip":"a trait which I am ashamed of, something I deal with, or something I fight against.",
+            "text":"",
+            "label":"Vice",
+            "value":1,
+            "min":0,
+            "max":1
+          },
+          "hope":{
+            "slug":"hope",
+            "phrase":"I will find hope when",
+            "tooltip":"In living this moment, I will have the opportunity to find hope.",
+            "label":"Moment",
+            "text":"",
+            "value":0,
+            "min":0,
+            "max":1
+          },
+          "brink":{
+            "slug":"brink",
+            "label":"Brink",
+            "phrase":"I've seen you",
+            "tooltip":"What I am capable of, when pushed to the edge of fear, hopelessness, and desperation",
+            "text":"",
+            "value":1,
+            "min":0,
+            "max":1
+          }
+          
+        }
+      },
+      "us": {
+        "templates": ["background","resources"]
+      },
+      "them":{
+        "templates":["background"],
+        "biography":"The sun went out 10 days ago, then They came. No one knows where they came from, all we know, is that they are here."
+      }
+    },
+    "Item": { }
+}

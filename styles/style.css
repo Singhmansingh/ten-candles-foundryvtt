@@ -1,0 +1,209 @@
+html {
+    --tenc-highlight-color:rgb(255, 192, 17);
+}
+
+
+.tc-card{
+    margin-bottom: 10px;
+}
+
+.tc-cardhead {
+    --color-underline-header: #782e22;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--color-underline-header) !important;
+    margin-bottom: 5px;
+    padding: 5px 0;
+}
+
+
+.tc-cardhead-part {
+    flex-wrap: nowrap !important ;
+}
+
+.sheet {
+    min-width: 400px;
+}
+
+.tc-burnbutton {
+    background-color: rgba(189, 28, 28, 0.753);
+    color: white;
+
+    margin-bottom: 10px;
+}
+
+.tc-cardhead p {
+    font-size: 1.5em;
+    margin: 0;
+}
+
+.tc-cardhead > * {
+    flex-shrink: 1;
+}
+
+.tc-brink {
+    color: var(--color-underline-header);
+}
+
+.tc-subtitle {
+    font-style: italic;
+}
+
+.tc-shift {
+    color: var(--color-underline-header);
+    white-space: nowrap;
+    background: none;
+    border: none;
+    display: grid;
+    place-items: center;
+    padding: 2px 0;
+}
+
+textarea {
+    font-family: inherit;
+    font-size: 1.2em;
+}
+
+
+.burn-truth {
+    font-size: 1em;
+}
+
+.inline {
+    display: inline;
+    width: min-content;
+}
+
+.cgridcol {
+    justify-content: space-between;
+    width: 100%;
+    grid-template-columns: 1fr;
+    display: grid;
+    grid-template-rows: min-content 1fr min-content;
+    flex-direction: column;
+    height: 100%;
+}
+
+
+.cgridcol > .item-list {
+    overflow-y: scroll;
+}
+
+
+.item {
+    margin-bottom: 3px;
+}
+
+.centered{
+    text-align: center;
+    
+}
+
+.truths-toggle {
+    transition: color 250ms ease;
+}
+
+.truths-toggle:hover {
+    cursor: pointer;
+    color: var(--tenc-highlight-color);
+}
+
+.tenc-roll{
+    background-color: black;
+}
+
+.tenc-dice-tray {
+    flex: 0;
+    box-sizing: border-box;
+    margin: 0 5px;
+    margin-bottom: 5px;
+}
+
+.tenc-dice-tray button {
+    background-color: transparent;
+    color: white;
+    font-family: inherit;
+    border: 1px solid rgb(187, 187, 187);
+    font-weight: 600;
+    font-size: 1.2em;
+    transition: background-color 350ms ease;
+
+}
+
+.tenc-dice-tray button:hover {
+    background-color: var(--tenc-highlight-color);
+    box-shadow: 0 0 5px var(--tenc-highlight-color);
+}
+
+#hope-dice-roll:hover {
+    background-color: rgb(218, 218, 218);
+    box-shadow: 0 0 5px rgb(255, 255, 255);
+    color: rgb(36, 36, 36);
+
+}
+
+.hope {
+    background: white !important;
+    color: black !important;
+
+}
+
+
+/*############## player HUD ##############*/
+
+#playerhud-application .window-content {
+    background: none;
+}
+
+.survivor-hud {
+    color: white;
+    text-align: center;
+}
+
+.survivor > span {
+    flex-shrink: 1 !important;
+}
+
+.survivor-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 1;
+    object-fit: contain;
+}
+
+
+.survivor .name {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 8px 0;
+}
+
+.survivor .card-type {
+    opacity: 0.5;
+}
+
+.survivor .card-text {
+    margin-top: 3px;
+    font-size: 1.4em;
+
+}
+
+.survivor.on-brink {
+    color: #b92b2b;
+    text-shadow: 0 0 5px currentColor;
+}
+
+.survivor.on-brink img {
+    box-shadow: 0 0 10px currentColor;
+}
+
+.survivor.over-brink {
+    color: #66666685;
+    text-shadow: none;
+}
+
+.survivor.over-brink img {
+    box-shadow: none;
+    opacity: 0.5;
+}
