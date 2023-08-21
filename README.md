@@ -7,4 +7,8 @@ A system for playing the tragic horror TTRPG 10 candles in foundry. This system 
 - player HUD to view all current actors and their top card stack
 
 ## Credits
-Thanks to [Pints1ze](https://github.com/pints1ze/ten-candles) for their ten candles module that provides the premade scene, burn bowl, and dice rolling inspiration!
+Thanks to [Pints1ze](https://github.com/pints1ze/ten-candles) for their ten candles module which provides alot of the underlying systems, including
+- premade scene with candles and burn bowl
+- lighting candles, and burn effects
+- GM and Player dice tracking
+- overall inspiration for this system! 
