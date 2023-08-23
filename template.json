@@ -14,20 +14,14 @@
             "phrase":"My Virtue is",
             "tooltip":"A trait which I am proud of, or that is otherwise helpful and positive.",
             "label":"Virtue",
-            "text":"",
-            "value":1,
-            "min":0,
-            "max":1
+            "text":""
           },
           "vice":{
             "slug":"vice",
             "phrase":"My Vice is",
             "tooltip":"a trait which I am ashamed of, something I deal with, or something I fight against.",
             "text":"",
-            "label":"Vice",
-            "value":1,
-            "min":0,
-            "max":1
+            "label":"Vice"
           },
           "hope":{
             "slug":"hope",

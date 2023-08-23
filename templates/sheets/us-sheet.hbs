@@ -4,9 +4,11 @@
         <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="{{ localize 'Name' }}"/></h1>
     </header>
 
+    <input type="hidden" value="{{actor.system.hope.value}}" name="system.hope.value">
+
     <section class="tc-card" style="margin-bottom: 5px">
         <div class="tc-cardhead border">
-            <p>Appearance & Background</p>
+            <p class="header">Concept</p>
         </div>
         <textarea name="system.biography">{{actor.system.biography}}</textarea>
     </section>
@@ -30,7 +32,7 @@
                             <button id="{{this.slug}}_down" style="text-align:left;" class="tc-shift" aria-label="move {{slug}} down"><i class="fa-solid fa-chevron-down"></i></button>
                         {{/unless}}
                         &nbsp;
-                        <p>{{this.label}}</p>
+                        <p class="header">{{this.label}}</p>
                         &nbsp;
                         &nbsp;
                         <span class="tc-subtitle" style="white-space: nowrap; display:flex;align-items:center;">{{this.tooltip}}...</span>
@@ -50,7 +52,7 @@
         <section class="tc-card" data-slug="{{actor.system.brink.slug}}">
             <div class="tc-cardhead border">
                 <div class="tc-cardhead-part flexrow">
-                    <p class="tc-brink">{{actor.system.brink.label}}</p>
+                    <p class="tc-brink header">{{actor.system.brink.label}}</p>
                     &nbsp;
                     &nbsp;
                     <span class="tc-subtitle" style="white-space: nowrap; display:flex;align-items:center;">{{actor.system.brink.tooltip}}...</span>

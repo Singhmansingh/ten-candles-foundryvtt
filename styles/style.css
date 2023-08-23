@@ -1,5 +1,15 @@
+
+@font-face {
+    font-family: 'Eordeoghlakat';
+    src: url(./Eordeoghlakat.ttf);
+}
+
 html {
     --tenc-highlight-color:rgb(255, 192, 17);
+}
+
+.header{
+    font-family: 'Eordeoghlakat';
 }
 
 
@@ -194,8 +204,8 @@ textarea {
     text-shadow: 0 0 5px currentColor;
 }
 
-.survivor.on-brink img {
-    box-shadow: 0 0 10px currentColor;
+.survivor.has-hope img {
+    box-shadow: 0 0 10px white;
 }
 
 .survivor.over-brink {

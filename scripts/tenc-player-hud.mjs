@@ -53,7 +53,7 @@ class PlayerApplication extends Application {
 
 window.PlayerApplication = PlayerApplication;
 
-let PlayersApp=new PlayerApplication();
+let PlayersApp=null;
 
 Hooks.on('updateActor',(actor,data)=> {
   console.log('change data',data,actor);
@@ -78,7 +78,7 @@ Hooks.on('updateActor',(actor,data)=> {
 })
 
 Hooks.on('renderSidebarTab',(app, html, data)=>{
-    let btn = $('<button>Survivor HUD</button>');
+    let btn = $('<button id="survivor-hud-toggle">Survivor HUD</button>');
     btn.on('click',()=> {
       let $app=$('#playerhud-application');
       if($app.length < 1){
@@ -89,5 +89,6 @@ Hooks.on('renderSidebarTab',(app, html, data)=>{
         $app.remove();
       }
     });
-    html.find('.create-folder').first().after(btn);
+  
+    if($('#survivor-hud-toggle').length<1) $('#actors footer.action-buttons').append(btn);
  })

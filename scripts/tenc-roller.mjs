@@ -6,8 +6,8 @@ let template = 'systems/tencandles/templates/applications/die-tray.hbs'
 
 const ROLLWITHHOPE=false;
 
-Hooks.on("ready",()=>{
-    
+Hooks.on("newHope",(aid)=>{
+    if(!game.user.isGM&&game.user.character._id==aid) game.user.character.system.hope.value=1;
 })
 
 Hooks.on('renderSidebarTab',(app, html, data)=> {
@@ -27,6 +27,7 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
         let playerdieroller= $tray.find('#player-dice-roll');
         let gmdieroller=$tray.find('#gm-dice-roll');
         let hopedieroller=$tray.find('#hope-dice-roll');
+
 
         hopedieroller.on('click',async event => {
             let hasHope=game.user.character.system.hope.value;
@@ -199,6 +200,7 @@ function parse16H(terms,isHope=false){
                         switch(die.result){
                             case 1: ones++; break;
                             case 6: sixes++; break;
+                            case 5: if(isHope) sixes++; break;
                         }
                     }
                 })

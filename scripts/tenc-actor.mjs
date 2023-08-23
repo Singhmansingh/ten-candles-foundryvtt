@@ -1,5 +1,6 @@
 let bowl = ["TlN6Vd0IbZ4JUXUS","p8tV1sHQgpnKqYGX","0SU38BAtAayGA7ID"];
 let candleCountId = '2ru6zPY7s96Nf1oI';
+let firemp3 = 'systems/tencandles/assets/fire-burning.mp3';
 
 export default class TenCadlesActorSheet extends ActorSheet {
 
@@ -58,7 +59,7 @@ export default class TenCadlesActorSheet extends ActorSheet {
                 newstack=swapElements(currstack,moveto,index);
             }
     
-    
+            
             formData['system.stack']=newstack;
         }
 
@@ -95,6 +96,13 @@ export default class TenCadlesActorSheet extends ActorSheet {
                 if(currstack.length!=0){
                     await $('.stackable').first().fadeOut('slow',function(){
                         toggleLight(bowl);
+                        let src = encodeURI(firemp3);
+                        AudioHelper.play({
+                        src,
+                        volume: 1,
+                        autoplay: true,
+                        loop: false
+                        }, true);
                         setTimeout(()=>toggleLight(bowl),3500);
                     });
     
@@ -121,6 +129,7 @@ export default class TenCadlesActorSheet extends ActorSheet {
             if(d) formData['system.locked']=true;
         }
         
+        Hooks.call('newHope');
         super._updateObject(event, formData);
     }
 }

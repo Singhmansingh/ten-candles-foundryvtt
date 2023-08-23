@@ -1,4 +1,6 @@
 import TenCadlesActorSheet from "./scripts/tenc-actor.mjs";
+import './scripts/tenc-candles.mjs';
+
 
 async function preloadHandlebarsTemplates(){
     const templatePaths=[
