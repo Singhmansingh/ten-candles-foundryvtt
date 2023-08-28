@@ -7,17 +7,32 @@ let template = 'systems/tencandles/templates/applications/die-tray.hbs'
 const ROLLWITHHOPE=false;
 
 Hooks.on("newHope",(aid)=>{
-    if(!game.user.isGM&&game.user.character._id==aid) game.user.character.system.hope.value=1;
+    if(!game.user.isGM&&game.user.character._id==aid) {
+        game.user.character.system.hope.value=1;
+        ChatMessage.create({
+            content: `<em>Has found hope</em>`,
+        })
+    }
 })
 
 Hooks.on('renderSidebarTab',(app, html, data)=> {
+
+   
 
     console.log(game);
     let options = {
         isGM: game.user.isGM,
     }
 
-    if(!game.user.isGM) options['hasHope']=game.user.character.system.hope.value
+    let burncardroller=renderBurnDieButton(html); //debug
+
+    if(!game.user.isGM) {
+        options['hasHope']=game.user.character.system.hope.value;
+        $('#burnCardName').html(game.user.character.system[game.user.character.system.stack[0]].label??'Card');
+        
+        //burncardroller=renderBurnDieButton(html);
+    }
+    
 
     renderTemplate(template,options).then(c => {
         let $tray=$(c);
@@ -27,12 +42,14 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
         let playerdieroller= $tray.find('#player-dice-roll');
         let gmdieroller=$tray.find('#gm-dice-roll');
         let hopedieroller=$tray.find('#hope-dice-roll');
-
+        let onesdieroller=$tray.find('#ones-dice-roll');
 
         hopedieroller.on('click',async event => {
             let hasHope=game.user.character.system.hope.value;
 
-            if(!hasHope) return ChatMessage.create({ 
+            console.log(hasHope);
+
+            if(hasHope==0) return ChatMessage.create({ 
                 content: '<em>You have yet to find hope.</em>' ,
                 whisper: [game.user.id]
             });
@@ -142,6 +159,7 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
             if(fails>0){
                 if(ones > 0) remainingDiceLine+=` <strong>${ones} dice</strong> are lost.`;
                 if(hasHope&&hope<=-1) remainingDiceLine+=` You can reroll your <strong>Hope</strong> die.`;
+                onesdieroller.data('dice',fails);
                 
             } else {
                 remainingDiceLine+=' No dice are lost.';
@@ -149,6 +167,9 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
             
             remainingDiceLine+=`<br><strong>${remainingDice}</strong> dice remain. They now have <strong>${10-remainingDice}</strong>.`;
             
+            let rerollDiceLine=$('<button style="margin-bottom:3px;">Reroll 1s</button>');
+
+            console.log(rerollDiceLine.get(0))
 
             if(hasHope) hopeLine+='<br>';
             
@@ -179,11 +200,79 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
             message=`They roll <strong>${sixes} successes</strong>.`;
             roll.toMessage({ flavor: message });
         });
+
+        burncardroller.on('click', async event => {
+            console.log(game.user.character);
+
+            let burntCard = game.user.character.system.stack[0];
+
+            let d = await Dialog.confirm({
+                title: 'Burn your card',
+                content: `<p>Are you ready to burn your ${burntCard}?</p>`,
+            });
+
+            if(!d) return;
+
+            game.user.character.system.stack.shift();
+
+            let stack =game.user.character.system.stack;
+
+            let charId=game.user.character.id;
+
+            let actor = game.actors.get(charId);
+
+            actor.update({
+                'system.stack':stack
+            })
+
+            ChatMessage.create({
+                content: `<em>Burns their ${burntCard}</em>`,
+            })
+            
+            if(game.user.character.system.stack.length>0){
+                $('#burnCardName').html(game.user.character.system[game.user.character.system.stack[0]].label);
+            }
+            return;
+        })
+
+        onesdieroller.on('click',async ()=>{
+            let dice = onesdieroller.data('dice');
+            if(!dice||dice==0) return console.log('no dice to reroll');
+            let roll=await new Roll(dice+'d6').evaluate();
+            
+            roll.dice[0].options.appearance = {
+                colorset: "black",
+                system:"dot"
+            };
+
+            let [ones,sixes,$_] = parse16H(roll.terms);
+           
+            let success = sixes>0?true:false;
+            let fails = ones;
+
+            onesdieroller.data('dice',fails);
+
+            roll.toMessage({
+                flavor: `You lose more of yourself. You reroll <strong>${sixes} successes</strong>, and <strong>${ones} fails</strong>.`
+            })
+            
+        })
         
     })
 
     
 })
+
+function renderBurnDieButton(html){
+    const $chatcontrols=html.find('#chat-controls');
+    $chatcontrols.css('margin-bottom','5px');
+    const $rolltypeselect=$chatcontrols.find('select');
+    $rolltypeselect.hide();
+    const btn=$('<button class="burnbutton" style="padding:0;margin:0 5px;"><i class="fas fa-fire" style="font-size:0.9em;"></i>&nbsp;Burn your <span id="burnCardName">card</span></button>')
+    $rolltypeselect.before(btn);
+
+    return btn;
+}
 
 
 

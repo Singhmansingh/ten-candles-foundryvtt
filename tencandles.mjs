@@ -1,4 +1,4 @@
-import TenCadlesActorSheet from "./scripts/tenc-actor.mjs";
+import TenCadlesActorSheet from "./scripts/tenc-actorsheet.mjs";
 import './scripts/tenc-candles.mjs';
 
 
@@ -26,6 +26,13 @@ Handlebars.registerHelper('json', function(context) {
 
 Handlebars.registerHelper('if_eq', function(a, b, opts) {
     if(a == b) // Or === depending on your needs
+        return opts.fn(this);
+    else
+        return opts.inverse(this);
+});
+
+Handlebars.registerHelper('unless_eq', function(a, b, opts) {
+    if(a != b) // Or === depending on your needs
         return opts.fn(this);
     else
         return opts.inverse(this);

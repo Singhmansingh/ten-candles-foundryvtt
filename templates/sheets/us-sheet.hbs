@@ -13,9 +13,9 @@
         <textarea name="system.biography">{{actor.system.biography}}</textarea>
     </section>
     <hr>
-    {{#if actor.system.brink.value}}
+    {{#if actor.system.stack.length}}
         {{#if actor.system.locked}}
-        <button class="tc-burnbutton"><i class="fas fa-fire"></i>&nbsp;&nbsp;Burn your {{#if cards.length}}{{cards.[0].label}}{{else}}Brink{{/if}}</button>
+        <button class="tc-burnbutton"><i class="fas fa-fire"></i>&nbsp;&nbsp;Burn your {{#if actor.system.stack.length}}{{cards.[0].label}}{{else}}Brink{{/if}}</button>
         {{else}}
         <button class="tc-lock"><i class="fas fa-lock"></i>&nbsp;&nbsp;Lock in stack</button>
         {{/if}}
@@ -28,11 +28,13 @@
                 <div class="tc-cardhead border">
                     <div class="tc-cardhead-part flexrow">
                         {{#unless ../actor.system.locked}}
+                            {{#unless_eq this.slug 'brink'}}
                             <button id="{{this.slug}}_up" style="text-align:left;" class="tc-shift" aria-label="move {{slug}} up"><i class="fa-solid fa-chevron-up"></i></button>
                             <button id="{{this.slug}}_down" style="text-align:left;" class="tc-shift" aria-label="move {{slug}} down"><i class="fa-solid fa-chevron-down"></i></button>
+                            {{/unless_eq}}
                         {{/unless}}
                         &nbsp;
-                        <p class="header">{{this.label}}</p>
+                        <p class="header {{#if_eq this.slug 'brink' }}tc-brink{{/if_eq}}">{{this.label}}</p>
                         &nbsp;
                         &nbsp;
                         <span class="tc-subtitle" style="white-space: nowrap; display:flex;align-items:center;">{{this.tooltip}}...</span>
@@ -48,23 +50,6 @@
         {{/each}}
     </div>
     <hr>
-    {{#if actor.system.brink.value}}
-        <section class="tc-card" data-slug="{{actor.system.brink.slug}}">
-            <div class="tc-cardhead border">
-                <div class="tc-cardhead-part flexrow">
-                    <p class="tc-brink header">{{actor.system.brink.label}}</p>
-                    &nbsp;
-                    &nbsp;
-                    <span class="tc-subtitle" style="white-space: nowrap; display:flex;align-items:center;">{{actor.system.brink.tooltip}}...</span>
-                </div>
-                <div class="tc-cardhead-part flexrow">
-
-                </div>
-                        
-            </div>
-            <textarea required {{#if ../actor.system.locked}}disabled{{/if}} name="system.brink.text" placeholder="{{actor.system.brink.phrase}}...">{{actor.system.brink.text}}</textarea>
-        </section>
-    {{/if}}
 
 </form>
 

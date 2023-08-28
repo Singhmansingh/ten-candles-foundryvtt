@@ -1,6 +1,6 @@
 //const templatePath="systems/tencandles/templates/applications/truths.html";
 const templatePath="systems/tencandles/templates/applications/truths.hbs";
-const diceIconSelector = '#chat-controls .chat-control-icon .fa-dice-d20';
+const diceIconSelector = '.chat-control-icon';
 
 var socket;
 
@@ -108,24 +108,20 @@ window.TruthsApplication = TruthsApplication;
 var TruthsApp = new TruthsApplication();
 
 Hooks.on('ready',()=> {
-    $(diceIconSelector).addClass('truths-toggle');
+    //$(diceIconSelector).addClass('truths-toggle');
+    const $truthstoggle=$('<a style="flex:0;flex-shrink:1;padding: 0 6px;"><i class="fas fa-scroll"></i></a>');
+    $(diceIconSelector).hide();
+    $('.burnbutton').after($truthstoggle);
 
-    $(document).on('click', diceIconSelector, ev => {
-        console.log("click!");
+    $truthstoggle.on('click',ev => {
         ev.preventDefault();
-
         let $dialog = $('.dialog--truths-container');
-
         if ($dialog.length < 1) {
-
             TruthsApp = new TruthsApplication();
 
-            let templateData = {
-                truths: ["The guards left a rifle in storage","We have 2 spare health kits","They travel in packs"]
-            };
-            
-            renderTemplate(templatePath, templateData).then(dlg => {
+            renderTemplate(templatePath, {}).then(dlg => {
                 let $form=$('#truths-template');
+
                 if($form.length < 1){
                     TruthsApp.render(true);
                 }
@@ -133,16 +129,13 @@ Hooks.on('ready',()=> {
                    
                 }
                 /*
-                new Dialog({
-                    title: "Truths table",
-                    content: dlg,
-                    buttons:{}
-                }, dialogOptions).render(true);*/
+                */
             });
         } else {
             //$dialog.remove();
         }
-    });
+    })
+
 })
 
 

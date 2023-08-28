@@ -5,7 +5,7 @@
 }
 
 html {
-    --tenc-highlight-color:rgb(255, 192, 17);
+    --tenc-highlight-color:rgb(145, 37, 11);
 }
 
 .header{
@@ -35,7 +35,7 @@ html {
     min-width: 400px;
 }
 
-.tc-burnbutton {
+.tc-burnbutton,.burnbutton {
     background-color: rgba(189, 28, 28, 0.753);
     color: white;
 
@@ -109,15 +109,6 @@ textarea {
     
 }
 
-.truths-toggle {
-    transition: color 250ms ease;
-}
-
-.truths-toggle:hover {
-    cursor: pointer;
-    color: var(--tenc-highlight-color);
-}
-
 .tenc-roll{
     background-color: black;
 }
@@ -141,8 +132,8 @@ textarea {
 }
 
 .tenc-dice-tray button:hover {
-    background-color: var(--tenc-highlight-color);
-    box-shadow: 0 0 5px var(--tenc-highlight-color);
+    background-color: var(--color-underline-header);
+    box-shadow: 0 0 5px var(--color-underline-header);
 }
 
 #hope-dice-roll:hover {
