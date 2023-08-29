@@ -1,0 +1,63 @@
+{
+  "appearance": {
+    "global": {
+      "labelColor": "#FFFFFF",
+      "diceColor": "#000000",
+      "outlineColor": "#000000",
+      "edgeColor": "#be1a0e",
+      "texture": "none",
+      "material": "auto",
+      "font": "auto",
+      "colorset": "custom",
+      "system": "dot"
+    }
+  },
+  "sfxList": [
+    {
+      "diceType": "d6",
+      "onResult": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "specialEffect": "PlayAnimationDark",
+      "options": {
+        "isGlobal": false,
+        "muteSound": false
+      }
+    }
+  ],
+  "settings": {
+    "enabled": true,
+    "showExtraDice": false,
+    "hideAfterRoll": true,
+    "timeBeforeHide": "2000",
+    "hideFX": "fadeOut",
+    "autoscale": true,
+    "scale": 75,
+    "speed": "1",
+    "imageQuality": "medium",
+    "shadowQuality": "low",
+    "bumpMapping": true,
+    "sounds": true,
+    "soundsSurface": "felt",
+    "soundsVolume": 0.5,
+    "canvasZIndex": "over",
+    "throwingForce": "medium",
+    "useHighDPI": false,
+    "antialiasing": "none",
+    "glow": false,
+    "showOthersSFX": true,
+    "immersiveDarkness": true,
+    "muteSoundSecretRolls": false,
+    "enableFlavorColorset": true,
+    "rollingArea": {
+      "top": 0,
+      "left": 0,
+      "width": 1361,
+      "height": 1016
+    }
+  }
+}

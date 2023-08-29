@@ -1,17 +1,43 @@
 
-let candleCountId = '2ru6zPY7s96Nf1oI';
-let candles = [
+const candleCountId = '2ru6zPY7s96Nf1oI';
+const bowl = ["TlN6Vd0IbZ4JUXUS","p8tV1sHQgpnKqYGX","0SU38BAtAayGA7ID"];
+const candles = [
     ["6YE9S50sHciN2HHj","43U9wUydN9rf5y9v"],
-    ["XUPTh4rT6iM2IH6h","CbFMbnPk12K7ZPWU"],
-    ["4LtRBthYK3Yv0PoX","KKs6jupYdEWpdWEt"],
-    ["9zJEqE3IfGpmfYPA","SzFybV75900CVteF"],
     ["RnuJBSyPKfoxMV9u","0XAQ42ZGrYz2HuUT"],
     ["Gcl9vsbwXZT2Kayh","daF9FaAXm4nhfOzp"],
-    ["JOCACVmAPgi946PQ","MtLp5ZerEWBPkL2A"],
-    ["WkIZ6io8z8XBiZE5","5qy3z9XGOqs1C8aN"],
+    ["PP6XWuSLiXw3jhOw","ADIgSBglENlsWljJ"],
     ["KMXOFV1GwHpC2rmg","XMxZRti0ZH7nM1T8"],
-    ["PP6XWuSLiXw3jhOw","ADIgSBglENlsWljJ"]
+    ["WkIZ6io8z8XBiZE5","5qy3z9XGOqs1C8aN"],
+    ["JOCACVmAPgi946PQ","MtLp5ZerEWBPkL2A"],
+    ["9zJEqE3IfGpmfYPA","SzFybV75900CVteF"],
+    ["4LtRBthYK3Yv0PoX","KKs6jupYdEWpdWEt"],
+    ["XUPTh4rT6iM2IH6h","CbFMbnPk12K7ZPWU"],
+
 ]; // each candle has an inner glow and outer
+const firemp3 = 'systems/tencandles/assets/fire-burning.mp3';
+
+
+function setCount(count){
+    canvas.drawings.updateAll({text: count}, (drawing => drawing.id === candleCountId));
+}
+
+async function toggleLight(lightIds, lightStatus = 'toggle') {
+    if (lightStatus === 'toggle') {
+        lightStatus = canvas.lighting.placeables[canvas.lighting.placeables.findIndex(light => light.id === lightIds[0])].data.hidden;
+    }
+
+    let candleCount = parseInt(canvas.drawings.placeables[canvas.drawings.placeables.findIndex(drawing => drawing.id === candleCountId)].data.text);
+    if (lightStatus) {
+        candleCount = candleCount + 1;
+    } else {
+        candleCount = candleCount - 1;
+    }
+    canvas.lighting.updateAll({hidden: !lightStatus}, (light => lightIds.includes(light.id)));
+    canvas.drawings.updateAll({text: candleCount}, (drawing => drawing.id === candleCountId));
+
+    return !lightStatus;
+}
+
 
 function getCandle(index){
     let innerId=canvas.lighting.placeables.findIndex(light => light.id === candles[index][0]);
@@ -23,26 +49,165 @@ function getCandle(index){
 }
 
 function outCandle(index){
-    let lightIds= candles[index];
     let [inner,outer]=getCandle(index);
-
-    if(inner.hidden&&outer.hidden) return true;
+    let lightIds = [inner.id,outer.id];
 
     canvas.lighting.updateAll({hidden: true}, (light => lightIds.includes(light.id)));
-    
-    let candleCount = parseInt(canvas.drawings.placeables[canvas.drawings.placeables.findIndex(drawing => drawing.id === candleCountId)].data.text) - 1;
-    canvas.drawings.updateAll({text: candleCount}, (drawing => drawing.id === candleCountId));
 }
 
 function lightCandle(index){
     let [inner,outer] = getCandle(index);
+    let lightIds = [inner.id,outer.id];
 
-    inner.hidden = false;
-    outer.hidden = false;
+    canvas.lighting.updateAll({hidden: false}, (light => lightIds.includes(light.id)));
 }
 
-Hooks.on("ready",()=>{
+const lightAllCandles = () => { for(let i=0;i<candles.length;i++) lightCandle(i); setCount(10); }
+const dimAllCandles = () => { for(let i=0;i<candles.length;i++) outCandle(i); setCount(0);}
+
+const candleOutGen = function* () {
+    outCandle(0);
+    outCandle(1);
+    outCandle(2);
+    setCount(7);
+    yield 2;
+    outCandle(3);
+    outCandle(4);
+    outCandle(5);
+    setCount(4);
+    yield 1;
+    outCandle(6);
+    outCandle(7);
+    outCandle(8);
+    outCandle(9);
+    setCount(0);
+    yield 'allout';
+}
+
+const candleLightGen = function* () {
+    while(true){
+        lightCandle(0);
+        lightCandle(1);
+        lightCandle(2);
+        setCount(3);
+        yield 2;
+        lightCandle(3);
+        lightCandle(4);
+        lightCandle(5);
+        setCount(6);
+        yield 1;
+        lightCandle(6);
+        lightCandle(7);
+        lightCandle(8);
+        lightCandle(9);
+        setCount(10);
+        yield 'allin';
+    }
+}
+
+function triggerBowl(){
+    let src = encodeURI(firemp3);
+
+    toggleLight(bowl);
+
+    AudioHelper.play({
+        src,
+        volume: 1,
+        autoplay: true,
+        loop: false
+    }, true);
+
+    setTimeout(()=>toggleLight(bowl),3500);
+}
+
+let gen;
+    
+function renderCandleMenu(){
+
+   let menu = new Dialog({
+        title:'Candle Controls',
+        buttons:{
+            candleButton01: {
+                label: '01',
+                callback: () => { toggleLight(candles[0]); menu.render(true); }
+            },
+            candleButton02: {
+                label: '02',
+                callback: () => { toggleLight(candles[1]); menu.render(true); }
+            },
+            candleButton03: {
+                label: '03',
+                callback: () => { toggleLight(candles[2]); menu.render(true); }
+            },
+            candleButton04: {
+                label: '04',
+                callback: () => { toggleLight(candles[3]); menu.render(true); }
+            },
+            candleButton05: {
+                label: '05',
+                callback: () => { toggleLight(candles[4]); menu.render(true); }
+            },
+            candleButton06: {
+                label: '06',
+                callback: () => { toggleLight(candles[5]); menu.render(true); }
+            },
+            candleButton07: {
+                label: '07',
+                callback: () => { toggleLight(candles[6]); menu.render(true); }
+            },
+            candleButton08: {
+                label: '08',
+                callback: () => { toggleLight(candles[7]); menu.render(true); }
+            },
+            candleButton09: {
+                label: '09',
+                callback: () => { toggleLight(candles[8]); menu.render(true); }
+            },
+            candleButton10: {
+                label: '10',
+                callback: () => { toggleLight(candles[9]); menu.render(true); }
+            },
+            
+            allOn:{
+                label: "Light All",
+                callback:()=> {lightAllCandles(); menu.render(true);}
+            },
+            allOff:{
+                label: "Out All",
+                callback:()=> {dimAllCandles();menu.render(true);}
+            },
+            triggerBowl:{
+                label: "Bowl",
+                callback:()=> {triggerBowl(); menu.render(true);}
+            },
+            initCandles:{
+                label: "Step Light",
+                callback:() => { 
+                    if(!gen) gen = candleLightGen();
+                    let candleCount = parseInt(canvas.drawings.placeables[canvas.drawings.placeables.findIndex(drawing => drawing.id === candleCountId)].data.text);
+                    if(candleCount<10) gen.next();
+                    // let val=gen.next().value; 
+                    // if(val=='allout') gen=candleLightGen(); 
+                    // else if (val=='allin') gen=candleOutGen(); 
+                    menu.render(true);
+                }
+            },
+            
+        }
+    }).render(true);
+}
 
 
-
+Hooks.on('init',()=>{
+    
+    Hooks.on("getSceneControlButtons", (data) => {
+        data[0].tools.push({
+          name: "module-candles",
+          title: "Candles",
+          icon: "fas fa-fire-flame-simple",
+          button: true,
+          onClick: () => renderCandleMenu(),
+          visible: game.user.isGM
+        })
+    });
 })
