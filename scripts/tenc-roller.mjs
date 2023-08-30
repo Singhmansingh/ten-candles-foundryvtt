@@ -28,7 +28,10 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
 
     if(!game.user.isGM) {
         options['hasHope']=game.user.character.system.hope.value;
-        $('#burnCardName').html(game.user.character.system[game.user.character.system.stack[0]].label??'Card');
+
+        let topcard=game.user.character.system[game.user.character.system.stack[0]];
+        if(topcard) $('#burnCardName').html(topcard.label+' ('+topcard.text+')'??'Card');
+        else noBurnButton('.burnbutton');
         
         //burncardroller=renderBurnDieButton(html);
     }
@@ -196,6 +199,8 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
             let roll = await new Roll(`${gmDiceCount}d6`).evaluate();
             let [ones,sixes,hope]=parse16H(roll.terms);
             let message;
+
+            onesdieroller.data('diceGM',ones);
             
             message=`They roll <strong>${sixes} successes</strong>.`;
             roll.toMessage({ flavor: message });
@@ -204,7 +209,7 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
         burncardroller.on('click', async event => {
             console.log(game.user.character);
 
-            let burntCard = game.user.character.system.stack[0];
+            let burntCard = game.user.character?.system?.stack[0]??'card';
 
             let d = await Dialog.confirm({
                 title: 'Burn your card',
@@ -213,12 +218,17 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
 
             if(!d) return;
 
+            if(game.user.isGM){
+                ChatMessage.create({
+                    content: `<em>They embrace their brink.</em>`,
+                });
+
+                return;
+            }
+
             game.user.character.system.stack.shift();
-
             let stack =game.user.character.system.stack;
-
             let charId=game.user.character.id;
-
             let actor = game.actors.get(charId);
 
             actor.update({
@@ -230,13 +240,23 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
             })
             
             if(game.user.character.system.stack.length>0){
-                $('#burnCardName').html(game.user.character.system[game.user.character.system.stack[0]].label);
+                let topcard=game.user.character.system[game.user.character.system.stack[0]];
+                $('#burnCardName').html(topcard.label+' ('+topcard.text+')'??'card');
+            }
+            else {
+                noBurnButton('.burnbutton');
             }
             return;
         })
 
         onesdieroller.on('click',async ()=>{
-            let dice = onesdieroller.data('dice');
+            let dice;
+            
+            if(game.user.isGM) dice = onesdieroller.data('diceGM');
+            else dice = onesdieroller.data('dice');
+
+
+
             if(!dice||dice==0) return console.log('no dice to reroll');
             let roll=await new Roll(dice+'d6').evaluate();
             
@@ -252,6 +272,13 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
 
             onesdieroller.data('dice',fails);
 
+            if(game.user.isGM){
+                roll.toMessage({
+                    flavor: `They are pushed to their brink. They reroll with <strong>${sixes} successes</strong>, and <strong>${ones} fails</strong>.`
+                })
+                return;
+
+            }
             roll.toMessage({
                 flavor: `You lose more of yourself. You reroll <strong>${sixes} successes</strong>, and <strong>${ones} fails</strong>.`
             })
@@ -262,6 +289,8 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
 
     
 })
+
+const noBurnButton = (target) => $(target).css('background-color','#ddddd1AF').attr('disabled',true).html('<i class="fas fa-fire" style="font-size:0.9em;"></i>&nbsp;Nothing left to burn');
 
 function renderBurnDieButton(html){
     const $chatcontrols=html.find('#chat-controls');

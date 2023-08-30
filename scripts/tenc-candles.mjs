@@ -23,10 +23,10 @@ function setCount(count){
 
 async function toggleLight(lightIds, lightStatus = 'toggle') {
     if (lightStatus === 'toggle') {
-        lightStatus = canvas.lighting.placeables[canvas.lighting.placeables.findIndex(light => light.id === lightIds[0])].data.hidden;
+        lightStatus = canvas.lighting.placeables[canvas.lighting.placeables.findIndex(light => light.id === lightIds[0])].document.hidden;
     }
 
-    let candleCount = parseInt(canvas.drawings.placeables[canvas.drawings.placeables.findIndex(drawing => drawing.id === candleCountId)].data.text);
+    let candleCount = parseInt(canvas.drawings.placeables[canvas.drawings.placeables.findIndex(drawing => drawing.id === candleCountId)].document.text);
     if (lightStatus) {
         candleCount = candleCount + 1;
     } else {
@@ -184,7 +184,7 @@ function renderCandleMenu(){
                 label: "Step Light",
                 callback:() => { 
                     if(!gen) gen = candleLightGen();
-                    let candleCount = parseInt(canvas.drawings.placeables[canvas.drawings.placeables.findIndex(drawing => drawing.id === candleCountId)].data.text);
+                    let candleCount = parseInt(canvas.drawings.placeables[canvas.drawings.placeables.findIndex(drawing => drawing.id === candleCountId)].document.text);
                     if(candleCount<10) gen.next();
                     // let val=gen.next().value; 
                     // if(val=='allout') gen=candleLightGen(); 

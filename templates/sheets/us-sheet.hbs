@@ -4,7 +4,13 @@
         <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="{{ localize 'Name' }}"/></h1>
     </header>
 
-    <input type="hidden" value="{{actor.system.hope.value}}" name="system.hope.value">
+    <section class="tc-card" style="margin-bottom: 5px; margin-top: 10px;">
+        {{#if_eq actor.system.hope.value 1}}
+            <button disabled class="tc-hope"><i class="fas fa-angel"></i>&nbsp;&nbsp;You have found hope</button>
+        {{else}}
+             <button disabled><i class="fas fa-angel"></i>&nbsp;&nbsp;You have yet to find hope</button>
+        {{/if_eq}}
+    </section>
 
     <section class="tc-card" style="margin-bottom: 5px">
         <div class="tc-cardhead border">

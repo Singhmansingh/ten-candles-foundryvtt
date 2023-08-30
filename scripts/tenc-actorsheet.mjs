@@ -5,7 +5,7 @@ let firemp3 = 'systems/tencandles/assets/fire-burning.mp3';
 export default class TenCadlesActorSheet extends ActorSheet {
 
     get template() {
-        return `systems/tencandles/templates/sheets/${this.actor.data.type}-sheet.hbs`
+        return `systems/tencandles/templates/sheets/${this.actor.type}-sheet.hbs`
     }
 
     getData() {
@@ -85,12 +85,10 @@ export default class TenCadlesActorSheet extends ActorSheet {
         if(el.hasClass('tc-shift')){
             let [slug, dir] = el.attr('id').split('_');
             formData['system.stack']=this.shiftCard(slug, dir);
-
         }
 
         else if(el.hasClass('tc-burnbutton')){
             let [burntCard, stack]=await this.burnCard(formData);
-            
             formData['system.stack']=stack;
         }
 

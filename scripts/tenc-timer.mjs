@@ -1,3 +1,5 @@
-Hooks.on('timer.timerExpired',(data) => {
-    console.log("times up",data);
+Hooks.on('init',()=>{
+    Hooks.on('timer.timerExpired',(data) => {
+        ui.notifications.info(data);
+    })
 })

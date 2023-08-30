@@ -18,7 +18,8 @@
     "./scripts/tenc-truths-app.mjs",
     "./scripts/tenc-player-hud.mjs",
     "./scripts/tenc-roller.mjs",
-    "./scripts/tenc-timer.mjs"
+    "./scripts/tenc-timer.mjs",
+    "./scripts/tenc-hopegrant.mjs"
   ],
   "styles": [
     "styles/style.css"
@@ -41,7 +42,26 @@
         "minimum": "10",
         "verified": "11"
       }
+    },
+    {
+      "id": "timer",
+      "type": "module",
+      "manifest":"https://raw.githubusercontent.com/Singhmansingh/SMS-TimerVTT/main/module.json",
+      "compatibility": {
+        "minimum": "0.7.9",
+        "verified": "11"
+      }
+    },
+    {
+      "id":"note-share",
+      "type":"module",
+      "manifest":"https://raw.githubusercontent.com/Singhmansingh/note-share/master/module.json",
+      "compatibility": {
+        "minimum": "10",
+        "verified": "11"
+      }
     }
+    
   ]
   }
 }
