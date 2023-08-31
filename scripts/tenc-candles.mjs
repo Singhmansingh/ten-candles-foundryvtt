@@ -49,10 +49,14 @@ function getCandle(index){
 }
 
 function outCandle(index){
+
+
     let [inner,outer]=getCandle(index);
     let lightIds = [inner.id,outer.id];
 
     canvas.lighting.updateAll({hidden: true}, (light => lightIds.includes(light.id)));
+
+    
 }
 
 function lightCandle(index){
@@ -105,6 +109,7 @@ const candleLightGen = function* () {
     }
 }
 
+
 function triggerBowl(){
     let src = encodeURI(firemp3);
 
@@ -120,85 +125,98 @@ function triggerBowl(){
     setTimeout(()=>toggleLight(bowl),3500);
 }
 
+let socket=null;
+
+const callCandleOut = function(id){
+    if(socket===null) socket=socketlib.registerSystem('tencandles');
+    socket.executeForAllGMs('outcandle',(id));
+}
+
 let gen;
     
 function renderCandleMenu(){
 
+    let buttons = {
+        candleButton01: {
+            label: '01',
+            callback: () => { if(!game.user.isGM) callCandleOut(0); else toggleLight(candles[0]);  menu.render(true); }
+        },
+        candleButton02: {
+            label: '02',
+            callback: () => { if(!game.user.isGM) callCandleOut(1); else toggleLight(candles[1]); menu.render(true); }
+        },
+        candleButton03: {
+            label: '03',
+            callback: () => { if(!game.user.isGM) callCandleOut(2); else toggleLight(candles[2]); menu.render(true); }
+        },
+        candleButton04: {
+            label: '04',
+            callback: () => { if(!game.user.isGM) callCandleOut(3); else toggleLight(candles[3]); menu.render(true); }
+        },
+        candleButton05: {
+            label: '05',
+            callback: () => { if(!game.user.isGM) callCandleOut(4); else toggleLight(candles[4]); menu.render(true); }
+        },
+        candleButton06: {
+            label: '06',
+            callback: () => { if(!game.user.isGM) callCandleOut(5); else toggleLight(candles[5]); menu.render(true); }
+        },
+        candleButton07: {
+            label: '07',
+            callback: () => { if(!game.user.isGM) callCandleOut(6); else toggleLight(candles[6]); menu.render(true); }
+        },
+        candleButton08: {
+            label: '08',
+            callback: () => { if(!game.user.isGM) callCandleOut(7); else toggleLight(candles[7]); menu.render(true); }
+        },
+        candleButton09: {
+            label: '09',
+            callback: () => { if(!game.user.isGM) callCandleOut(8); else toggleLight(candles[8]); menu.render(true); }
+        },
+        candleButton10: {
+            label: '10',
+            callback: () => { if(!game.user.isGM) callCandleOut(9); else toggleLight(candles[9]); menu.render(true); }
+        },
+    }
+
+    let gmbuttons = {
+        allOn:{
+            label: "Light All",
+            callback:()=> {lightAllCandles(); menu.render(true);}
+        },
+        allOff:{
+            label: "Out All",
+            callback:()=> {dimAllCandles();menu.render(true);}
+        },
+        triggerBowl:{
+            label: "Bowl",
+            callback:()=> {triggerBowl(); menu.render(true);}
+        },
+        initCandles:{
+            label: "Step Light",
+            callback:() => { 
+                if(!gen) gen = candleLightGen();
+                let candleCount = parseInt(canvas.drawings.placeables[canvas.drawings.placeables.findIndex(drawing => drawing.id === candleCountId)].document.text);
+                if(candleCount<10) gen.next();
+                // let val=gen.next().value; 
+                // if(val=='allout') gen=candleLightGen(); 
+                // else if (val=='allin') gen=candleOutGen(); 
+                menu.render(true);
+            }
+        },
+    }
+
+    if(game.user.isGM) buttons={...buttons, ...gmbuttons}
+
    let menu = new Dialog({
         title:'Candle Controls',
-        buttons:{
-            candleButton01: {
-                label: '01',
-                callback: () => { toggleLight(candles[0]); menu.render(true); }
-            },
-            candleButton02: {
-                label: '02',
-                callback: () => { toggleLight(candles[1]); menu.render(true); }
-            },
-            candleButton03: {
-                label: '03',
-                callback: () => { toggleLight(candles[2]); menu.render(true); }
-            },
-            candleButton04: {
-                label: '04',
-                callback: () => { toggleLight(candles[3]); menu.render(true); }
-            },
-            candleButton05: {
-                label: '05',
-                callback: () => { toggleLight(candles[4]); menu.render(true); }
-            },
-            candleButton06: {
-                label: '06',
-                callback: () => { toggleLight(candles[5]); menu.render(true); }
-            },
-            candleButton07: {
-                label: '07',
-                callback: () => { toggleLight(candles[6]); menu.render(true); }
-            },
-            candleButton08: {
-                label: '08',
-                callback: () => { toggleLight(candles[7]); menu.render(true); }
-            },
-            candleButton09: {
-                label: '09',
-                callback: () => { toggleLight(candles[8]); menu.render(true); }
-            },
-            candleButton10: {
-                label: '10',
-                callback: () => { toggleLight(candles[9]); menu.render(true); }
-            },
-            
-            allOn:{
-                label: "Light All",
-                callback:()=> {lightAllCandles(); menu.render(true);}
-            },
-            allOff:{
-                label: "Out All",
-                callback:()=> {dimAllCandles();menu.render(true);}
-            },
-            triggerBowl:{
-                label: "Bowl",
-                callback:()=> {triggerBowl(); menu.render(true);}
-            },
-            initCandles:{
-                label: "Step Light",
-                callback:() => { 
-                    if(!gen) gen = candleLightGen();
-                    let candleCount = parseInt(canvas.drawings.placeables[canvas.drawings.placeables.findIndex(drawing => drawing.id === candleCountId)].document.text);
-                    if(candleCount<10) gen.next();
-                    // let val=gen.next().value; 
-                    // if(val=='allout') gen=candleLightGen(); 
-                    // else if (val=='allin') gen=candleOutGen(); 
-                    menu.render(true);
-                }
-            },
-            
-        }
+        buttons
     }).render(true);
 }
 
 
 Hooks.on('init',()=>{
+    Hooks.on('burnCard',triggerBowl);
     
     Hooks.on("getSceneControlButtons", (data) => {
         data[0].tools.push({
@@ -207,7 +225,19 @@ Hooks.on('init',()=>{
           icon: "fas fa-fire-flame-simple",
           button: true,
           onClick: () => renderCandleMenu(),
-          visible: game.user.isGM
+          visible: game.user.isGM || game.user.isPC
         })
     });
+
+    game.socket.on('tencandles.triggerburn',()=>{
+        console.log('burn recieved');
+
+        if(game.user.isGM) triggerBowl();
+    })
+
 })
+
+Hooks.on('outCandle',(id)=>{
+    outCandle(id);
+})
+

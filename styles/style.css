@@ -26,6 +26,11 @@ html {
     padding: 5px 0;
 }
 
+hr {
+    color: #837360;
+    border-color: currentColor;
+    opacity: 0.4;
+}
 
 .tc-cardhead-part {
     flex-wrap: nowrap !important ;
@@ -35,11 +40,23 @@ html {
     min-width: 400px;
 }
 
+.actor button:disabled {
+    border-color:rgb(36, 36, 36)
+}
+
 .tc-burnbutton,.burnbutton {
     background-color: rgba(189, 28, 28, 0.753);
-    color: white;
-
     margin-bottom: 10px;
+    font-family: 'Kurale', serif;
+    font-weight: 600;
+    color: #e9e9da;
+    border: none !important;
+    position: relative;
+    box-shadow: none;
+}
+
+textarea {
+    color: #e9e9da !important;
 }
 
 .tc-cardhead p {
@@ -58,6 +75,10 @@ html {
 .tc-hope {
     color: black;
     background-color: rgba(255, 255, 255, 0.842);
+}
+
+.tc-no-hope:disabled,.tc-lock {
+    color: #e9e9da ;
 }
 
 .tc-subtitle {
@@ -125,7 +146,7 @@ textarea {
     margin-bottom: 5px;
 }
 
-.tenc-dice-tray button {
+/* .tenc-dice-tray button {
     background-color: transparent;
     color: white;
     font-family: inherit;
@@ -133,13 +154,12 @@ textarea {
     font-weight: 600;
     font-size: 1.2em;
     transition: background-color 350ms ease;
-
 }
 
 .tenc-dice-tray button:hover {
     background-color: var(--color-underline-header);
     box-shadow: 0 0 5px var(--color-underline-header);
-}
+} */
 
 #hope-dice-roll:hover {
     background-color: rgb(218, 218, 218);

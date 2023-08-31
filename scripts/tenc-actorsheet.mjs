@@ -1,12 +1,14 @@
-let bowl = ["TlN6Vd0IbZ4JUXUS","p8tV1sHQgpnKqYGX","0SU38BAtAayGA7ID"];
-let candleCountId = '2ru6zPY7s96Nf1oI';
-let firemp3 = 'systems/tencandles/assets/fire-burning.mp3';
-
 export default class TenCadlesActorSheet extends ActorSheet {
 
-    get template() {
-        return `systems/tencandles/templates/sheets/${this.actor.type}-sheet.hbs`
-    }
+
+    static get defaultOptions() {
+        return foundry.utils.mergeObject(super.defaultOptions, {
+          classes: ["dnd5e", "sheet", "actor","character"],
+          template: `systems/tencandles/templates/sheets/us-sheet.hbs`,
+          width: 640,
+          height: 660,
+        });
+      }
 
     getData() {
         const data = super.getData();
@@ -71,6 +73,9 @@ export default class TenCadlesActorSheet extends ActorSheet {
             ChatMessage.create({
                 content: `<em>Burns their ${burntCard}</em>`,
             })
+
+            let socket = socketlib.registerSystem("tencandles");
+            socket.executeForAllGMs('triggerburn');
         }
 
         return [burntCard, stack];

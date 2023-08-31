@@ -8,6 +8,8 @@ Hooks.once("socketlib.ready", () => {
     console.log("socketlib - READY!");
 	socket = socketlib.registerSystem("tencandles");
 	socket.register("updatetruths", updateTruths);
+    socket.register("triggerburn",()=>{Hooks.call('burnCard')});
+    socket.register("outcandle",(candleid)=>{Hooks.call('outCandle',candleid)})
 });
 
 Hooks.on('init',()=> {

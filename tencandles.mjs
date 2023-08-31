@@ -2,14 +2,6 @@ import TenCadlesActorSheet from "./scripts/tenc-actorsheet.mjs";
 import './scripts/tenc-candles.mjs';
 
 
-async function preloadHandlebarsTemplates(){
-    const templatePaths=[
-        "systems/tencandles/templates/partials/us-card-block.hbs"
-    ];
-
-    return loadTemplates(templatePaths)
-}
-
 
 Hooks.once("init",function() {
     console.log("tencandles | Initializing 10 Candles System");
@@ -17,7 +9,6 @@ Hooks.once("init",function() {
     Actors.unregisterSheet("core", ActorSheet);
     Actors.registerSheet("tencandles", TenCadlesActorSheet, { makeDefault: true });
 
-    preloadHandlebarsTemplates();
 })
 
 Handlebars.registerHelper('json', function(context) {

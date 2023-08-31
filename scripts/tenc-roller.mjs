@@ -17,7 +17,7 @@ Hooks.on("newHope",(aid)=>{
 
 Hooks.on('renderSidebarTab',(app, html, data)=> {
 
-   
+    let socket = socketlib.registerSystem("tencandles");
 
     console.log(game);
     let options = {
@@ -223,6 +223,8 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
                     content: `<em>They embrace their brink.</em>`,
                 });
 
+                socket.executeForAllGMs('triggerburn');
+                
                 return;
             }
 
@@ -238,6 +240,9 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
             ChatMessage.create({
                 content: `<em>Burns their ${burntCard}</em>`,
             })
+
+            
+            socket.executeForAllGMs('triggerburn');
             
             if(game.user.character.system.stack.length>0){
                 let topcard=game.user.character.system[game.user.character.system.stack[0]];

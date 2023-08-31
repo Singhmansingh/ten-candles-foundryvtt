@@ -4,15 +4,9 @@
         <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="{{ localize 'Name' }}"/></h1>
     </header>
 
-    <section class="tc-card" style="margin-bottom: 5px; margin-top: 10px;">
-        {{#if_eq actor.system.hope.value 1}}
-            <button disabled class="tc-hope"><i class="fas fa-angel"></i>&nbsp;&nbsp;You have found hope</button>
-        {{else}}
-             <button disabled><i class="fas fa-angel"></i>&nbsp;&nbsp;You have yet to find hope</button>
-        {{/if_eq}}
-    </section>
 
-    <section class="tc-card" style="margin-bottom: 5px">
+
+    <section class="tc-card characteristics" style="margin-bottom: 5px">
         <div class="tc-cardhead border">
             <p class="header">Concept</p>
         </div>
@@ -30,7 +24,7 @@
     {{/if}}
     <div>
         {{#each cards}}
-            <section class="tc-card stackable" data-slug="{{this.slug}}">
+            <section class="tc-card stackable characteristics" data-slug="{{this.slug}}">
                 <div class="tc-cardhead border">
                     <div class="tc-cardhead-part flexrow">
                         {{#unless ../actor.system.locked}}
@@ -56,6 +50,16 @@
         {{/each}}
     </div>
     <hr>
-
+    <section class="tc-card" style="margin-bottom: 5px; margin-top: 10px;">
+        {{#if actor.system.stack.length}}
+            {{#if_eq actor.system.hope.value 1}}
+                <button disabled class="tc-hope"><i class="fas fa-angel"></i>&nbsp;&nbsp;You have found hope</button>
+            {{else}}
+                <button disabled class="tc-no-hope"><i class="fas fa-angel"></i>&nbsp;&nbsp;You have yet to find hope</button>
+            {{/if_eq}}
+        {{else}}
+                <button disabled><i class="fas fa-angel"></i>&nbsp;&nbsp;All hope is lost</button>
+        {{/if}}
+    </section>
 </form>
 
