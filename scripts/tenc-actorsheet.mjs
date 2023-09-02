@@ -1,3 +1,5 @@
+import { socketToGM } from "./socket.mjs";
+
 export default class TenCadlesActorSheet extends ActorSheet {
 
 
@@ -22,11 +24,7 @@ export default class TenCadlesActorSheet extends ActorSheet {
         
         data.cards = cards;
 
-        console.log(data.cards);
-
         return data;
-
-
     }
 
     shiftCard(slug, dir){
@@ -74,16 +72,13 @@ export default class TenCadlesActorSheet extends ActorSheet {
                 content: `<em>Burns their ${burntCard}</em>`,
             })
 
-            let socket = socketlib.registerSystem("tencandles");
-            socket.executeForAllGMs('triggerburn');
+            socketToGM('triggerburn');
         }
 
         return [burntCard, stack];
     }
 
     async _updateObject(event, formData){
-
-        console.log(event.submitter);
 
         let el=$(event.submitter);
 

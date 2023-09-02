@@ -1,0 +1,67 @@
+{
+  "appearance": {
+    "global": {
+      "labelColor": "#FFFFFF",
+      "diceColor": "#700505",
+      "outlineColor": "#700505",
+      "edgeColor": "#700505",
+      "texture": "none",
+      "material": "auto",
+      "font": "auto",
+      "colorset": "black",
+      "system": "dot_b"
+    }
+  },
+  "sfxList": [
+    {
+      "diceType": "d6",
+      "onResult": [
+        "6"
+      ],
+      "specialEffect": "PlayAnimationOutline"
+    },
+    {
+      "diceType": "d6",
+      "onResult": [
+        "1"
+      ],
+      "specialEffect": "PlayAnimationParticleSparkles"
+    },
+    {
+      "diceType": "d6",
+      "onResult": [
+        "6"
+      ],
+      "specialEffect": "PlaySoundCustom",
+      "options": {
+        "path": "angelical-choir-144582.mp3"
+      }
+    }
+  ],
+  "settings": {
+    "enabled": true,
+    "showExtraDice": false,
+    "hideAfterRoll": true,
+    "timeBeforeHide": "2000",
+    "hideFX": "fadeOut",
+    "autoscale": true,
+    "scale": 75,
+    "speed": "1",
+    "imageQuality": "high",
+    "shadowQuality": "high",
+    "bumpMapping": true,
+    "sounds": true,
+    "soundsSurface": "felt",
+    "soundsVolume": 0.5,
+    "canvasZIndex": "over",
+    "throwingForce": "medium",
+    "useHighDPI": true,
+    "antialiasing": "msaa",
+    "glow": true,
+    "showOthersSFX": true,
+    "immersiveDarkness": true,
+    "muteSoundSecretRolls": false,
+    "enableFlavorColorset": true,
+    "rollingArea": false
+  }
+}

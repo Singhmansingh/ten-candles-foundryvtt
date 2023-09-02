@@ -1,16 +1,8 @@
+import { socketListener, socketToOthers } from "./socket.mjs";
+
 //const templatePath="systems/tencandles/templates/applications/truths.html";
 const templatePath="systems/tencandles/templates/applications/truths.hbs";
 const diceIconSelector = '.chat-control-icon';
-
-var socket;
-
-Hooks.once("socketlib.ready", () => {
-    console.log("socketlib - READY!");
-	socket = socketlib.registerSystem("tencandles");
-	socket.register("updatetruths", updateTruths);
-    socket.register("triggerburn",()=>{Hooks.call('burnCard')});
-    socket.register("outcandle",(candleid)=>{Hooks.call('outCandle',candleid)})
-});
 
 Hooks.on('init',()=> {
     game.settings.register('tenc-module', 'truthSet', {
@@ -20,9 +12,9 @@ Hooks.on('init',()=> {
         default: {
             msg:'example',
             truths:[]
-        },        // can be used to set up the default structure
-      });
-
+        },  
+    });
+    socketListener('updatetruths',updateTruths);
 })
 
  
@@ -80,7 +72,7 @@ class TruthsApplication extends FormApplication {
 
         await this.settruths(this.truths);
 
-        if(refresh) socket.executeForOthers("updatetruths",null);
+        if(refresh) socketToOthers('updatetruths');
         
         this.render();
     }

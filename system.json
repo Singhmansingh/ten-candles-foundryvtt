@@ -4,7 +4,7 @@
   "description": "A system for playing the tragic horror game 10 Candles",
   "manifest": "https://raw.githubusercontent.com/Singhmansingh/ten-candles-foundryvtt/master/system.json",
   "download":"https://github.com/Singhmansingh/ten-candles-foundryvtt/archive/refs/heads/master.zip",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "compatibility": {
     "minimum": "10",
     "verified": "11",

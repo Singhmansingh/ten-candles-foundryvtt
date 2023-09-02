@@ -1,10 +1,8 @@
+import { socketToGM } from "./socket.mjs";
+
 let playerDiceCountId = 'KSonnDd7CnBOuF2I';
-
 let gmDiceCountId = 'CUo0X0jXWTR5Je7E';
-
 let template = 'systems/tencandles/templates/applications/die-tray.hbs'
-
-const ROLLWITHHOPE=false;
 
 Hooks.on("newHope",(aid)=>{
     if(!game.user.isGM&&game.user.character._id==aid) {
@@ -17,9 +15,6 @@ Hooks.on("newHope",(aid)=>{
 
 Hooks.on('renderSidebarTab',(app, html, data)=> {
 
-    let socket = socketlib.registerSystem("tencandles");
-
-    console.log(game);
     let options = {
         isGM: game.user.isGM,
     }
@@ -32,8 +27,7 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
         let topcard=game.user.character.system[game.user.character.system.stack[0]];
         if(topcard) $('#burnCardName').html(topcard.label+' ('+topcard.text+')'??'Card');
         else noBurnButton('.burnbutton');
-        
-        //burncardroller=renderBurnDieButton(html);
+
     }
     
 
@@ -49,8 +43,6 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
 
         hopedieroller.on('click',async event => {
             let hasHope=game.user.character.system.hope.value;
-
-            console.log(hasHope);
 
             if(hasHope==0) return ChatMessage.create({ 
                 content: '<em>You have yet to find hope.</em>' ,
@@ -68,10 +60,10 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
                 material: "metal",
             };
 
-            let [ones,sixes,hope]=parse16H(roll.terms,true);
+            let [fails,successes,hope]=parse16H(roll.terms,true); // success on 5 or 6
 
             let msg;
-            if(sixes) msg='Your hope pushes you forward. You <strong>succeed</strong>.';
+            if(successes) msg='Your hope pushes you forward. You <strong>succeed</strong>.';
             else msg='You hope fails to inspire. You <strong>fail</strong>.';
 
             roll.toMessage({ flavor: '<em>'+msg+'</em>' });
@@ -85,15 +77,7 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
             let playerDiceCountDrawing = canvas.drawings.placeables[canvas.drawings.placeables.findIndex(drawing => drawing.id === playerDiceCountId)];
             let playerDiceCount = parseInt(playerDiceCountDrawing.data.text);
 
-            let hasHope=false;
-
-            if(ROLLWITHHOPE) hasHope=game.user.character.system.hope.value;
-
-
-
             let dice=`${playerDiceCount}d6`;
-
-            if(hasHope) dice+='+1d6';
 
             let roll=await new Roll(dice).evaluate();
 
@@ -101,91 +85,41 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
                 colorset: "black",
                 system:"dot"
             };
-
-            if(hasHope) roll.dice[1].options.appearance = {
-                            colorset: "custom",
-                            foreground: "#000000",
-                            background: "#FFFFFF",
-                            outline: "#000000",
-                            edge: "#000000",
-                            material: "metal",
-                        };
             
-            let [ones,sixes,hope] = parse16H(roll.terms);
-
-            //let sixLine = `You rolled <strong>${sixes} sixes</strong>`;
-            //let onesLine = `<br>You rolled <strong>${ones} ones</strong>`;
+            let [fails,successes,hope] = parse16H(roll.terms);
 
             let remainingDice=playerDiceCount-ones;
 
-
-            let hopeLine='';
-
-            if(hasHope) hopeLine='Your hope empowers you, ';
+            //output message
 
             let candleResultLine='';
-
             let remainingDiceLine='';
 
-            let successes=sixes+hope;
-            let fails=ones-hope;
 
-            if(successes>0) {
-
-                if(hasHope){
-                    if(hope>0){
-                        if(sixes > 0) hopeLine+="pushing you beyond your limits.";
-                        else hopeLine+="where all else fails.";
-                    }
-                    else {
-                        hopeLine+="in times of strife.";
-                    }
-                }
+            if(successes>0) { // a success was rolled
                 
                 candleResultLine=`You succeed with <strong>${successes} successes</strong>, `;
-
-                if(ones>0) {
-                    candleResultLine+=`but they encroach.`;
-                }
-                else {
-                    candleResultLine+='and keep them at bay.';
-                }
+                if(fails>0) candleResultLine+=`but they encroach.`; // but fails were also rolled
+                else candleResultLine+='and keep them at bay.';
 
             }
 
             else {
-                if(hasHope) hopeLine+='though it is not enough.';
                 candleResultLine=`You have <strong>failed</strong>. Darkness draws closer.`;
-                
             }
 
             if(fails>0){
-                if(ones > 0) remainingDiceLine+=` <strong>${ones} dice</strong> are lost.`;
-                if(hasHope&&hope<=-1) remainingDiceLine+=` You can reroll your <strong>Hope</strong> die.`;
-                onesdieroller.data('dice',fails);
+                remainingDiceLine+=` <strong>${fails} dice</strong> are lost.`;
+                onesdieroller.data('dice',fails); // update the reroller
                 
-            } else {
-                remainingDiceLine+=' No dice are lost.';
-            }
+            } else remainingDiceLine+=' No dice are lost.';
             
             remainingDiceLine+=`<br><strong>${remainingDice}</strong> dice remain. They now have <strong>${10-remainingDice}</strong>.`;
             
-            let rerollDiceLine=$('<button style="margin-bottom:3px;">Reroll 1s</button>');
-
-            console.log(rerollDiceLine.get(0))
-
-            if(hasHope) hopeLine+='<br>';
-            
-            let res=await roll.toMessage({ flavor: 
-                //sixLine+
-                //onesLine+
-                '<em>'+
-                hopeLine+
-                '</em>'+
+            await roll.toMessage({ flavor: 
                 candleResultLine+
                 '<br>'+
                 remainingDiceLine
-
             });
 
         });
@@ -223,28 +157,27 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
                     content: `<em>They embrace their brink.</em>`,
                 });
 
-                socket.executeForAllGMs('triggerburn');
-                
+                socketToGM('triggerburn');
                 return;
             }
 
             game.user.character.system.stack.shift();
+
             let stack =game.user.character.system.stack;
             let charId=game.user.character.id;
             let actor = game.actors.get(charId);
 
-            actor.update({
-                'system.stack':stack
-            })
+            actor.update({ 'system.stack':stack })
 
             ChatMessage.create({
                 content: `<em>Burns their ${burntCard}</em>`,
             })
 
             
-            socket.executeForAllGMs('triggerburn');
+            socketToGM('triggerburn');
+
             
-            if(game.user.character.system.stack.length>0){
+            if(game.user.character.system.stack.length>0){ // if there is ccards left to burn, display it on the burn button
                 let topcard=game.user.character.system[game.user.character.system.stack[0]];
                 $('#burnCardName').html(topcard.label+' ('+topcard.text+')'??'card');
             }
@@ -260,8 +193,6 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
             if(game.user.isGM) dice = onesdieroller.data('diceGM');
             else dice = onesdieroller.data('dice');
 
-
-
             if(!dice||dice==0) return console.log('no dice to reroll');
             let roll=await new Roll(dice+'d6').evaluate();
             
@@ -270,22 +201,19 @@ Hooks.on('renderSidebarTab',(app, html, data)=> {
                 system:"dot"
             };
 
-            let [ones,sixes,$_] = parse16H(roll.terms);
+            let [fails,successes,$_] = parse16H(roll.terms);
            
-            let success = sixes>0?true:false;
-            let fails = ones;
-
             onesdieroller.data('dice',fails);
 
             if(game.user.isGM){
                 roll.toMessage({
-                    flavor: `They are pushed to their brink. They reroll with <strong>${sixes} successes</strong>, and <strong>${ones} fails</strong>.`
+                    flavor: `They are pushed to their brink. They reroll with <strong>${successes} successes</strong>, and <strong>${fails} fails</strong>.`
                 })
                 return;
 
             }
             roll.toMessage({
-                flavor: `You lose more of yourself. You reroll <strong>${sixes} successes</strong>, and <strong>${ones} fails</strong>.`
+                flavor: `You lose more of yourself. You reroll <strong>${successes} successes</strong>, and <strong>${fails} fails</strong>.`
             })
             
         })
@@ -329,7 +257,7 @@ function parse16H(terms,isHope=false){
                 })
             }
             else{
-                let hopedie = term.results[0].active&&term.results[0].result; //lmao
+                let hopedie = term.results[0].active&&term.results[0].result;
                 if(hopedie==6) hope++;
                 else if(hopedie==1)hope--;
             }
